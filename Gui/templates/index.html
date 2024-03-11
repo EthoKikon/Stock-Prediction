@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Sentiment Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Stock Sentiment Analysis</h1>
+        <div class="company-selector">
+            <label for="company-select">Select a Company:</label>
+            <select id="company-select">
+                <option value="HDFC Bank Ltd">HDFC Bank Ltd</option>
+                <option value="State Bank of India">State Bank of India</option>
+                <option value="ICICI Bank Ltd">ICICI Bank Ltd</option>
+                <option value="Axis Bank Ltd">Axis Bank Ltd</option>
+            </select>
+            <button onclick="showStatus()">Show Status</button>
+        </div>
+        <div id="status-container" class="status-container"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+
+</html>
