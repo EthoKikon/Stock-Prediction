@@ -1,51 +1,101 @@
-function showStatus() {
+// Define global variables for Chart.js chart and data
+var chart;
+var chartData = {
+    labels: [],
+    datasets: [{
+        label: 'Stock Price',
+        data: [],
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+    }]
+};
+
+function showStatus(triggered = false) {
     var companySelect = document.getElementById("company-select");
     var selectedCompany = companySelect.value;
     var statusContainer = document.getElementById("status-container");
+    var newsContainer = document.getElementById("news-container");
+    var sentimentContainer = document.getElementById("sentiment-container");
 
-    // Clear previous status
-    statusContainer.innerHTML = "";
+    if (triggered) {
+        // Make AJAX request to Flask server to get stock data
+        fetch(`/get_stock_data/${selectedCompany}`)
+            .then(response => response.json())
+            .then(data => {
+                // Update stock price
+                statusContainer.innerHTML = `<h2>${data.company}</h2><p>Stock Price: ${data.price}</p>`;
 
-    // Make AJAX request to Flask server to get stock data
-    fetch(`/get_stock_data/${selectedCompany}`)
-        .then(response => response.json())
-        .then(data => {
-            // Create elements to display status based on selected company
-            var statusHeader = document.createElement("h2");
-            var stockPrice = document.createElement("p");
-            var stockGraph = document.createElement("img");
+                 // Parse stock price to remove currency symbol and convert to float
+                var price = parseFloat(data.price.replace(/[^0-9.-]+/g, ''));
 
-            // Update content based on response data
-            statusHeader.textContent = data.company;
+             if (!isNaN(price)) { // Check if price is a valid number
+                    // Update Chart.js data
+                    var currentDate = new Date().toLocaleTimeString();
+                    chartData.labels.push(currentDate);
+                    chartData.datasets[0].data.push(price);
 
-            // Check if price is defined before displaying it
-            if (data.price) {
-                stockPrice.textContent = `Stock Price: ${data.price}`;
-            } else {
-                stockPrice.textContent = "Stock Price: Price not available";
-            }
+                    console.log("Chart data:", chartData); // Log chartData for debugging
 
-            // Check if graph URL is defined before setting its src attribute
-            if (data.graph) {
-                 // Set the src attribute of the image element to the graph URL
-                stockGraph.src = data.graph;
-                stockGraph.alt = "Stock Graph"; // Add alt text for accessibility
-                stockGraph.classList.add("stock-graph"); // Add a CSS class for styling
-            } else {
-                // Handle case where graph URL is not provided
-                stockGraph.textContent = "Graph not available"; // Provide a placeholder image
-            }
+                    // Limit data to show only last 10 points
+                    if (chartData.labels.length > 10) {
+                        chartData.labels.shift();
+                        chartData.datasets[0].data.shift();
+                    }
 
-            // Append elements to statusContainer
-            statusContainer.appendChild(statusHeader);
-            statusContainer.appendChild(stockPrice);
-            statusContainer.appendChild(stockGraph);
-        })
-        .catch(error => console.error('Error:', error));
+                    // Update Chart.js chart
+                    chart.update();
+                } else {
+                    console.error("Error parsing stock price:", data.price);
+                }
+
+                //News content
+                var newsContent = "<ul><li>News 1</li><li>News 2</li><li>News 3</li></ul>";
+                newsContainer.innerHTML = `<h2>News</h2>${newsContent}`;
+
+                // Fetch sentiment analysis
+                var sentiment = "Positive";
+                sentimentContainer.innerHTML = `<h2>Sentiment Analysis</h2><p>Sentiment: ${sentiment}</p>`;
+            })
+            .catch(error => console.error('Error:', error));
+    }
 }
 
-// showStatus initially to display stock data
-showStatus();
+
+// Event listener for the "Show Status" button
+document.getElementById("show-status-button").addEventListener("click", function() {
+    showStatus(true);
+});
+
+// Call showStatus initially to prepare the status display and start dynamic updates
+showStatus(true);
+
+// Create Chart.js chart
+var ctx = document.getElementById('stock-chart').getContext('2d');
+chart = new Chart(ctx, {
+    type: 'line',
+    data: chartData,
+    options: {
+        scales: {
+            x: {
+                display: true,
+                title: {
+                    display: true,
+                    text: 'Time'
+                }
+            },
+            y: {
+                display: true,
+                title: {
+                    display: true,
+                    text: 'Stock Price'
+                }
+            }
+        }
+    }
+});
 
 // Update every three seconds
-setInterval(showStatus, 3000);
+setInterval(function() {
+    showStatus(true);
+}, 3000);

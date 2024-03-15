@@ -24,21 +24,14 @@ def scrape_stock_data(url):
 
     # Find the element containing the stock price
     price_element = soup.find('div', class_='YMlKec fxKbKc')
-    # Find the element containing the graph URL
-    graph_element = soup.find('div', class_='ushogf')
 
     # Extract and return the stock price and graph URL
     if price_element:
         price = price_element.text.strip()
     else:
         price = "Price not found"
-    
-    if graph_element:
-        graph_url = graph_element.find('img')['src']
-    else:
-        graph_url = None
 
-    return price, graph_url
+    return price
 
 # Route to render the HTML template
 @app.route('/')
@@ -50,11 +43,11 @@ def index():
 def get_stock_data(company):
     if company in company_urls:
         url = company_urls[company]
-        price, graph_url = scrape_stock_data(url)
-        if graph_url:
-            return jsonify({'company': company, 'price': price, 'graph': graph_url})
+        price = scrape_stock_data(url)
+        if price:
+            return jsonify({'company': company, 'price': price})
         else:
-            return jsonify({'error': 'Graph URL not found'})
+            return jsonify({'error': 'Price URL not found'})
     else:
         return jsonify({'error': 'Company not found'})
 

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock Sentiment Analysis</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Include Chart.js library -->
 </head>
 
 <body>
@@ -19,9 +20,18 @@
                 <option value="ICICI Bank Ltd">ICICI Bank Ltd</option>
                 <option value="Axis Bank Ltd">Axis Bank Ltd</option>
             </select>
-            <button onclick="showStatus()">Show Status</button>
+            <button id="show-status-button">Show Status</button>
         </div>
         <div id="status-container" class="status-container"></div>
+
+        <!-- Container for stock graph -->
+        <canvas id="stock-chart" width="400" height="300"></canvas>
+
+        <!-- Container for news of selected company -->
+        <div id="news-container" class="news-container"></div>
+
+        <!-- Container for sentiment analysis -->
+        <div id="sentiment-container" class="sentiment-container"></div>
     </div>
 
     <script src="{{ url_for('static', filename='main.js') }}"></script>
