@@ -67,3 +67,76 @@ h1 {
 .status-container h2 {
     margin-top: 50px;
 }
+/* styles.css */
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+/* News item container */
+.news-item {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    /* Add a border between news items */
+    padding-bottom: 20px;
+    /* Add some padding below each news item */
+}
+/* Latest News heading */
+.news-container h2 {
+    color: #272626;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+/* Headline style */
+.news-item h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: #424242;
+}
+
+/* Source and time style */
+.news-details {
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.news-source {
+    font-weight: bold;
+}
+
+.news-time {
+    margin-left: 10px;
+}
+
+/* Read more link style */
+.news-item a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.news-item a:hover {
+    text-decoration: underline;
+}
+
+.sentiment-label {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.positive {
+    background-color: #4caf50;
+    color: white;
+}
+
+.negative {
+    background-color: #f44336;
+    color: white;
+}
+
+.neutral {
+    background-color: #2196f3;
+    color: white;
+}

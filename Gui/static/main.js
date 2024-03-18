@@ -41,7 +41,7 @@ function showStatus(triggered = false) {
                     if (chartData.labels.length > 10) {
                         chartData.labels.shift();
                         chartData.datasets[0].data.shift();
-                    }
+                 }
 
                     // Update Chart.js chart
                     chart.update();
@@ -49,9 +49,19 @@ function showStatus(triggered = false) {
                     console.error("Error parsing stock price:", data.price);
                 }
 
-                //News content
-                var newsContent = "<ul><li>News 1</li><li>News 2</li><li>News 3</li></ul>";
-                newsContainer.innerHTML = `<h2>News</h2>${newsContent}`;
+                // Sample news content
+            var newsContent = `<h2>Latest News</h2>`;
+            data.news_headlines.forEach(function(newsItem) {
+                newsContent += `
+                    <div class="news-item">
+                        <h3>${newsItem.headline}</h3>
+                        <p class="news-details">Source: <span class="news-source">${newsItem.source}</span>, Time: <span class="news-time">${newsItem.time}</span></p>
+                        <a href="#">Read more</a>
+                    </div>
+                `;
+            });
+            newsContainer.innerHTML = newsContent;
+
 
                 // Fetch sentiment analysis
                 var sentiment = "Positive";

@@ -31,7 +31,20 @@ def scrape_stock_data(url):
     else:
         price = "Price not found"
 
-    return price
+   # Find news headlines, sources, and times
+    news_data = []
+    news_elements = soup.find_all('div', class_='Yfwt5')
+    for news_element in news_elements:
+        headline = news_element.text.strip()
+        parent_div = news_element.parent
+        source_element = parent_div.find_next(class_='sfyJob')
+        time_element = parent_div.find_next(class_='Adak')
+        if source_element and time_element:
+            source = source_element.text.strip()
+            time = time_element.text.strip()
+            news_data.append({'headline': headline, 'source': source, 'time': time})
+
+    return price, news_data
 
 # Route to render the HTML template
 @app.route('/')
@@ -43,9 +56,9 @@ def index():
 def get_stock_data(company):
     if company in company_urls:
         url = company_urls[company]
-        price = scrape_stock_data(url)
+        price, news_headlines = scrape_stock_data(url)
         if price:
-            return jsonify({'company': company, 'price': price})
+            return jsonify({'company': company, 'price': price, 'news_headlines': news_headlines})
         else:
             return jsonify({'error': 'Price URL not found'})
     else:
