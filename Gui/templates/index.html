@@ -25,13 +25,21 @@
         <div id="status-container" class="status-container"></div>
 
         <!-- Container for stock graph -->
-        <canvas id="stock-chart" width="400" height="300"></canvas>
+        <canvas id="stock-chart" width="100" height="50"></canvas>
 
         <!-- Container for news of selected company -->
         <div id="news-container" class="news-container"></div>
 
-        <!-- Container for sentiment analysis -->
-        <div id="sentiment-container" class="sentiment-container"></div>
+<!-- Container for sentiment analysis -->
+<div id="sentiment-container" class="sentiment-container">
+    <h2>Sentiment Analysis</h2>
+    <div id="sentiment-chart-container">
+        <canvas id="sentiment-chart" width="400" height="200"></canvas>
+    </div>
+    <div id="sentiment-text">
+        <p>Sentiment: <span id="sentiment-text-value">Positive</span></p>
+    </div>
+</div>
     </div>
 
     <script src="{{ url_for('static', filename='main.js') }}"></script>

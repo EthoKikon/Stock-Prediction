@@ -5,15 +5,6 @@ body {
     background-color: #f2f2f2;
 }
 
-.container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
 h1 {
     text-align: center;
     color: #333;
@@ -70,8 +61,12 @@ h1 {
 /* styles.css */
 
 .container {
-    max-width: 800px;
-    margin: 0 auto;
+    max-width: 80%; /* Set maximum width for the container */
+    margin: 0 auto; /* Center the container horizontally */
+    padding: 20px; /* Add some padding around the container */
+    background-color: #f9f9f9; /* Add background color */
+    border-radius: 8px; /* Add border radius for rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add box shadow for depth */
 }
 /* News item container */
 .news-item {
@@ -139,4 +134,45 @@ h1 {
 .neutral {
     background-color: #2196f3;
     color: white;
+}
+
+#sentiment-container {
+    margin-top: 20px;
+    /* Add some space above the sentiment container */
+    padding: 20px;
+    /* Add padding to the sentiment container */
+    background-color: #fff;
+    /* Add background color to the sentiment container */
+    border-radius: 8px;
+    /* Add border radius for rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    /* Add box shadow for depth */
+}
+
+#sentiment-chart-container {
+    margin-bottom: 20px;
+    /* Add some space below the sentiment chart */
+}
+
+#sentiment-text {
+    text-align: center;
+    /* Center the sentiment text */
+}
+
+.sentiment-container h2 {
+    margin-bottom: 20px;
+    /* Add some space below the sentiment container heading */
+}
+#stock-chart {
+    width: 50%;
+    /* Make the chart width 100% of its container */
+    height: 50%;
+    /* Allow the chart height to adjust automatically */
+}
+
+.stock-chart-container {
+    max-width: 100px;
+    /* Set maximum width for the chart container */
+    margin: 0 auto;
+    /* Center the chart container horizontally */
 }

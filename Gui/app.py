@@ -31,14 +31,27 @@ def scrape_stock_data(url):
     else:
         price = "Price not found"
 
-   # Find news headlines, sources, and times
+   # Find news headlines, sources, and times from both sections
     news_data = []
-    news_elements = soup.find_all('div', class_='Yfwt5')
-    for news_element in news_elements:
-        headline = news_element.text.strip()
-        parent_div = news_element.parent
+    news_sections = soup.find_all('div', class_='Yfwt5')  # News sections
+    top_news_sections = soup.find_all('div', class_='F2KAFc')  # Top news sections
+
+    # Extract news from news sections
+    for news_section in news_sections:
+        headline = news_section.text.strip()
+        parent_div = news_section.parent
         source_element = parent_div.find_next(class_='sfyJob')
         time_element = parent_div.find_next(class_='Adak')
+        if source_element and time_element:
+            source = source_element.text.strip()
+            time = time_element.text.strip()
+            news_data.append({'headline': headline, 'source': source, 'time': time})
+
+    # Extract news from top news sections
+    for top_news_section in top_news_sections:
+        headline = top_news_section.text.strip()
+        source_element = top_news_section.find_next(class_='AYBNIb')
+        time_element = top_news_section.find_next(class_='HzW5e')
         if source_element and time_element:
             source = source_element.text.strip()
             time = time_element.text.strip()
