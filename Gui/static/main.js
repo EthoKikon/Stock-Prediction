@@ -49,26 +49,48 @@ function showStatus(triggered = false) {
                     console.error("Error parsing stock price:", data.price);
                 }
 
-                // Update sentiment analysis text (placeholder)
+                // Update sentiment analysis text
                 var sentiment = "Positive";
                 var sentimentTextValue = document.getElementById("sentiment-text-value");
                 sentimentTextValue.textContent = sentiment;
+                
+                 // Make AJAX request to predict sentiment for scraped news headlines
+                fetch('/predict_sentiment', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ news_headlines: data.news_headlines })
+                })
+                .then(response => response.json())
+                .then(sentimentData => {
+                   // Update sentiment chart based on sentiment counts
+                   var positiveCount = sentimentData.positive_count;
+                   var negativeCount = sentimentData.negative_count;
+                   var neutralCount = sentimentData.neutral_count;
+    
+                   sentimentChart.data.labels = ['Positive', 'Negative', 'Neutral'];
+                   sentimentChart.data.datasets[0].data = [positiveCount, negativeCount, neutralCount];
+                   sentimentChart.update();
+                })
+                .catch(error => console.error('Error predicting sentiment:', error));
 
-                // Update news content
+               // Update news content
                 var newsContent = `<h2>Latest News</h2>`;
                 data.news_headlines.forEach(function (newsItem) {
-                
-                    newsContent += `
-                        <div class="news-item">
-                            <h3>${newsItem.headline}</h3>
-                            <p class="news-details">Source: <span class="news-source">${newsItem.source}</span>, Time: <span class="news-time">${newsItem.time}</span></p>
-                            <a href="#">Read more</a>
-                        </div>
-                    `;    
-                }); 
-                newsContainer.innerHTML = newsContent;
-            })
-            .catch(error => console.error('Error:', error));
+                var sentimentScore = newsItem.sentiment_score === 1 ? "Positive" : (newsItem.sentiment_score === 0 ? "Negative" : "Neutral");
+                var sentimentStyle = newsItem.sentiment_score === 1 ? "color: green; font-weight: bold; font-size: 16px;" : (newsItem.sentiment_score === 0 ? "color: red; font-weight: bold; font-size: 16px;" : "color: gray; font-weight: bold; font-size: 16px;");
+                newsContent += `
+                    <div class="news-item">
+                        <h3>${newsItem.headline}</h3>
+                        <p class="news-details">Source: <span class="news-source">${newsItem.source}</span>, Time: <span class="news-time">${newsItem.time}</span>, Sentiment: <span style="${sentimentStyle}">${sentimentScore}</span></p>
+                        <a href="#">Read more</a>
+                    </div>
+                `;
+            }); 
+            newsContainer.innerHTML = newsContent;
+        })
+        .catch(error => console.error('Error:', error));
     }
 }
 
@@ -115,36 +137,64 @@ initializeSentimentChart();
 
 // Function to initialize the sentiment chart
 function initializeSentimentChart() {
-    sentimentChart = new Chart(document.getElementById('sentiment-chart').getContext('2d'), {
-        type: 'pie',
+    sentimentChart = new Chart(document.getElementById('sentiment-bar-chart').getContext('2d'), {
+        type: 'bar',
         data: {
-            labels: ["Positive", "Negative", "Neutral"],
+            labels: ['Positive', 'Negative', 'Neutral'],
             datasets: [{
                 label: 'Sentiment Analysis',
-                data: [50, 30, 20],
+                data: [0, 0, 0],
                 backgroundColor: [
-                    'rgb(75, 192, 192)',
-                    'rgb(255, 99, 132)',
-                    'rgb(255, 205, 86)'
+                    'rgba(75, 192, 192, 0.7)',
+                    'rgba(255, 99, 132, 0.7)',
+                    'rgba(255, 206, 86, 0.7)'
                 ],
-                hoverOffset: 4
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 206, 86, 1)'
+                ],
+                borderWidth: 1
             }]
         },
         options: {
-            maintainAspectRatio: false, // Set to false to allow chart resizing
+            maintainAspectRatio: false,
             responsive: true,
-            aspectRatio: 1.3, // Adjust aspect ratio for a larger chart
             plugins: {
                 legend: {
-                    position: 'bottom',
+                    display: false
                 },
+                title: {
+                    display: true,
+                    text: 'Sentiment Analysis',
+                    font: {
+                        size: 18,
+                        weight: 'bold'
+                    },
+                    padding: 20
+                }
             },
-            layout: {
-                padding: {
-                    left: 10,
-                    right: 10,
-                    top: 10,
-                    bottom: 10
+            scales: {
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                y: {
+                    grid: {
+                        drawBorder: false,
+                        color: 'rgba(0, 0, 0, 0.1)'
+                    },
+                    ticks: {
+                        font: {
+                            size: 14
+                        }
+                    }
                 }
             }
         }

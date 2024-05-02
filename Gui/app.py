@@ -1,11 +1,53 @@
 # app.py
 from flask import Flask, render_template, jsonify, request
+import joblib
 import requests
 from bs4 import BeautifulSoup
 import time
+import pandas as pd
+from preprocess import preprocess_text 
+
 
 
 app = Flask(__name__)
+
+# Load the SVM model and its associated components
+model_data = joblib.load('svm_model.pkl')
+svm_model = model_data['svm_model']
+tfidf_vectorizer = model_data['tfidf_vectorizer']
+
+# Function to preprocess text using the loaded preprocess_text function
+def preprocess_input_text(text):
+    return preprocess_text(text)
+
+# Function to make predictions using the loaded SVM model and TF-IDF vectorizer
+def predict_sentiment(text):
+    preprocessed_text = preprocess_input_text(text)
+    # Transform the preprocessed text using the TF-IDF vectorizer
+    text_tfidf = tfidf_vectorizer.transform([preprocessed_text])
+    # Make predictions using the SVM model
+    prediction = svm_model.predict(text_tfidf)
+    return prediction[0]
+
+# Route to predict sentiment for scraped news headlines
+@app.route('/predict_sentiment', methods=['POST'])
+def predict_sentiment_for_news():
+    # Receive scraped news headlines from the request
+    news_headlines = request.json.get('news_headlines', [])
+    
+    # Predict sentiment for each news headline
+    sentiment_predictions = [predict_sentiment(headline) for headline in news_headlines]
+    
+    # Convert sentiment predictions to a JSON serializable format
+
+    sentiment_predictions = [int(pred) for pred in sentiment_predictions]
+    # Count the number of positive, negative, and neutral sentiments
+    positive_count = sentiment_predictions.count(1)
+    negative_count = sentiment_predictions.count(0)
+    neutral_count = sentiment_predictions.count(2)
+    
+    return jsonify({'sentiment_predictions': sentiment_predictions, 'positive_count': positive_count, 'negative_count': negative_count, 'neutral_count': neutral_count})
+
 
 # Dictionary to store company names and their corresponding URLs
 company_urls = {
@@ -38,7 +80,7 @@ def scrape_stock_data(url):
 
     # Extract news from news sections
     for news_section in news_sections:
-        headline = news_section.text.strip()
+        headline = str(news_section.text.strip()) 
         parent_div = news_section.parent
         source_element = parent_div.find_next(class_='sfyJob')
         time_element = parent_div.find_next(class_='Adak')
@@ -49,7 +91,7 @@ def scrape_stock_data(url):
 
     # Extract news from top news sections
     for top_news_section in top_news_sections:
-        headline = top_news_section.text.strip()
+        headline = str(top_news_section.text.strip())
         source_element = top_news_section.find_next(class_='AYBNIb')
         time_element = top_news_section.find_next(class_='HzW5e')
         if source_element and time_element:
@@ -71,6 +113,9 @@ def get_stock_data(company):
         url = company_urls[company]
         price, news_headlines = scrape_stock_data(url)
         if price:
+            sentiment_scores = [predict_sentiment(headline['headline']) for headline in news_headlines]
+            for i, headline in enumerate(news_headlines):
+                headline['sentiment_score'] = int(sentiment_scores[i])  # Convert to int here
             return jsonify({'company': company, 'price': price, 'news_headlines': news_headlines})
         else:
             return jsonify({'error': 'Price URL not found'})

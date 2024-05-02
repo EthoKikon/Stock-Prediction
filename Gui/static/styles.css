@@ -161,18 +161,13 @@ h1 {
 
 .sentiment-container h2 {
     margin-bottom: 20px;
-    /* Add some space below the sentiment container heading */
 }
 #stock-chart {
     width: 50%;
-    /* Make the chart width 100% of its container */
     height: 50%;
-    /* Allow the chart height to adjust automatically */
 }
 
 .stock-chart-container {
     max-width: 100px;
-    /* Set maximum width for the chart container */
     margin: 0 auto;
-    /* Center the chart container horizontally */
 }
