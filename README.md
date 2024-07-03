@@ -82,7 +82,3 @@ This project predicts the sentiment of news headlines ('positive', 'negative', o
 ### Summary Bar Chart of Sentiment Scores
 
 ![Sentiment Summary](Screenshots/sentiment_summary_screenshot.png)
-
-```
-
-```
