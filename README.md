@@ -56,15 +56,6 @@ This project predicts the sentiment of news headlines ('positive', 'negative', o
    http://127.0.0.1:5000/
    ```
 
-### Clone the Repository
-
-First, clone the repository to your local machine using the following command:
-
-```bash
-git clone https://github.com/EthoKikon/Stock-Prediction.git
-cd Stock-Prediction
-
-
 ## Usage
 
 - Open a web browser and go to `http://127.0.0.1:5000/`
@@ -91,4 +82,7 @@ cd Stock-Prediction
 ### Summary Bar Chart of Sentiment Scores
 
 ![Sentiment Summary](Screenshots/sentiment_summary_screenshot.png)
+
+```
+
 ```
