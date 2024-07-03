@@ -20,22 +20,50 @@ This project predicts the sentiment of news headlines ('positive', 'negative', o
 
 ## Installation and Setup
 
-1. Clone the repository:
+1. **Clone the repository:**
+
    ```bash
-   git clone https://github.com/yourusername/your-repo-name.git
+   git clone https://github.com/EthoKikon/Stock-Prediction.git
    ```
-2. Navigate to the project directory:
+
+2. **Navigate to the project directory:**
+
    ```bash
-   cd your-repo-name
+   cd Stock-Prediction
    ```
-3. Install necessary dependencies:
+
+3. **Create and activate a virtual environment (optional but recommended):**
+
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+   ```
+
+4. **Install necessary dependencies:**
+
    ```bash
    pip install -r requirements.txt
    ```
-4. Run the Flask server:
+
+5. **Run the Flask server:**
+
    ```bash
    python app.py
    ```
+
+6. **Open a web browser and go to:**
+   ```
+   http://127.0.0.1:5000/
+   ```
+
+### Clone the Repository
+
+First, clone the repository to your local machine using the following command:
+
+```bash
+git clone https://github.com/EthoKikon/Stock-Prediction.git
+cd Stock-Prediction
+
 
 ## Usage
 
@@ -63,3 +91,4 @@ This project predicts the sentiment of news headlines ('positive', 'negative', o
 ### Summary Bar Chart of Sentiment Scores
 
 ![Sentiment Summary](Screenshots/sentiment_summary_screenshot.png)
+```
